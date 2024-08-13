@@ -1,0 +1,12 @@
+SELECT g.date_act, g.sub_id, t.pp_name,  s.service_name, sub.company_name, COUNT(sub.pp_type_id)
+FROM gross g 
+Left join tariff t on t.sub_id = g.sub_id  
+  AND t.pp_end_date > now()
+LEFT JOIN service s ON s.sub_id = g.sub_id 
+  AND s.service_stop_date > now() AND s.service_start_date = g.date_act
+LEFT JOIN subscriber sub ON sub.sub_id = g.sub_id 
+ AND sub.status = 1  and sub.pp_type_id = 'voice'
+WHERE g.reactivation = 0 and g.date_act >= '2023-12-01' and g.date_act <='2023-12-31'
+and g.customer_type = 'Business' 
+GROUP by 1,2,3,4,5
+ORDER by 2
